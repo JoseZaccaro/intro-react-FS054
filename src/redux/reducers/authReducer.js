@@ -1,11 +1,13 @@
 import { createReducer } from '@reduxjs/toolkit'
-import { login as loginAction, logout } from '../actions/authActions'
+import { eraseError, login as loginAction, loginAsync, logout } from '../actions/authActions'
+import { toast } from 'react-toastify'
 
 
 const initialState = {
     loggedIn: false,
     token: '',
     expiresIn: '',
+    error: '',
     user: {
         name: '',
         email: '',
@@ -15,14 +17,16 @@ const initialState = {
 
 const authReducer = createReducer(initialState, (builder) => {
     builder
-        .addCase(loginAction, (state, action) => {
+        .addCase(loginAsync.fulfilled, (state, action) => {
 
             //falso a true
             // action.type
             // action.payload
 
             // state.expiresIn = action.payload.expiresIn
-
+            toast('Welcome ' + action.payload.name, {
+                type: 'success',
+            });
             return {
                 ...state,
                 user: {
@@ -32,13 +36,39 @@ const authReducer = createReducer(initialState, (builder) => {
                 },
                 token: action.payload.token,
                 loggedIn: action.payload.loggedIn,
-                expiresIn: action.payload.expiresIn
+                expiresIn: action.payload.expiresIn,
+                error: ''
             }
         })
-    .addCase(logout, (state, action) => {
-    // true a false
-        return initialState;
-    })
+        .addCase(loginAsync.pending, (state, action) => {
+            console.log('pending');
+            return {
+                ...state,
+                error: ''
+            }
+        })
+        .addCase(loginAsync.rejected, (state, action) => {
+            toast('Error credenciales incorrectas', {
+                type: 'error',
+            });
+
+            return {
+                ...state,
+                error: 'Error credenciales incorrectas'
+            }
+        })
+
+        .addCase(logout, (state, action) => {
+            // true a false
+            return initialState;
+        })
+        .addCase(eraseError, (state, action) => {
+            return {
+                ...state,
+                error: ''
+            }
+        }
+        )
 
 })
 
