@@ -19,10 +19,10 @@ export const login = createAction('LOGIN', (data /*informacion del usuario*/) =>
 export const loginAsync = createAsyncThunk("LOGIN", async (data /*informacion del usuario*/) => {
 
 
-    const response = await axios.post("http://localhost:8080/api/auth/login", data)
+    const response = await axios.post("https://homebanking-app.onrender.com/api/auth/login", data)
     let token = response.data;
 
-    const responseCurrent = await axios.get("http://localhost:8080/api/auth/current", {
+    const responseCurrent = await axios.get("https://homebanking-app.onrender.com/api/auth/current", {
         headers: {
             Authorization: `Bearer ${token}`
         }

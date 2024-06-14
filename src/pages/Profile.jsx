@@ -8,7 +8,7 @@ const Profile = () => {
   const [accounts, setAccounts] = useState([])
 
   useEffect(() => {
-    axios.get("http://localhost:8080/api/accounts/current", {
+    axios.get("https://homebanking-app.onrender.com/api/accounts/current", {
       headers: {
         Authorization: `Bearer ${token}`
       }
